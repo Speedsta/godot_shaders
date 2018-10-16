@@ -1,0 +1,38 @@
+shader_type spatial;
+
+uniform float splatres = 1;
+
+uniform float grassres = 1;
+uniform float rockres = 1;
+uniform float dirtres = 1;
+uniform float sandres = 1;
+uniform sampler2D splatmap;
+uniform sampler2D grass : hint_albedo;
+uniform sampler2D rock : hint_albedo;
+uniform sampler2D dirt : hint_albedo;
+uniform sampler2D sand : hint_albedo;
+
+
+
+void fragment(){
+ //float splatval = texture(splatmap, UV).r;
+  
+ 
+	float grassval = texture(splatmap, UV).g;
+ 	float rockval = texture(splatmap, UV).b;
+ 	float dirtval = texture(splatmap, UV).r;
+	float sandval = texture(splatmap, UV).a;
+	 
+	vec3 grasstex = texture(grass, UV*grassres).rgb * grassval;
+	vec3 rocktex = texture(rock, UV*rockres).rgb * rockval;
+	vec3 dirttex = texture(dirt, UV*dirtres).rgb * dirtval;
+	//vec3 dirttex = texture(dirt, UV*dirtres).rgb * dirtval;
+	vec3 sandtex = texture(sand, UV*sandres).rgb * sandval;
+
+//those are only for experimental purpose
+//vec3 result = (grasstex-sandtex)+(rocktex-sandtex)+(dirttex-sandtex)+sandtex/sandtex;
+//vec3 result = ((grasstex+rocktex+dirttex)-sandtex)+sandtex+(grasstex+rocktex+dirttex);
+
+vec3 result = grasstex+rocktex+dirttex+sandtex;
+ ALBEDO = result;
+ }
